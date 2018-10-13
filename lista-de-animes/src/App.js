@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
   
@@ -11,16 +12,30 @@ class App extends Component {
   }
 
 
-componentWillMount(){
+componentDidMount(){
+  console.log('DidMounttt')
 
   fetch('http://api-animes.surge.sh')
-       .then(function(res) {res.json()})
-       .then(function(posts){console.log(posts)})
-       .then(function(resposta){
-         console.log(resposta)
-         this.state = {lista:resposta};
-        })
+    .then(function(resposta){resposta.json()})
+    .then(function(resposta){
+      this.setState({lista:resposta})
+    }.bind(this),
+    console.log(this)
+    )
+    
+  
    
+  // $.ajax({
+  //   url:'http://api-animes.surge.sh/',
+  //   dataType: 'json',
+  //   success:function(resposta){
+  //     console.log(this)
+  //     this.setState({lista:resposta});
+  //   }.bind(this)
+  // });
+
+
+}
   
   //  newAnime(post){
   //    const options ={
@@ -37,9 +52,10 @@ componentWillMount(){
   //      .catch(error => console.log("Erro!"))
   //  }
 
-}
+
 
   render() {
+    console.log('render')
     return (
   <div id="layout">
     <a href="#menu" id="menuLink"  className="menu-link">
