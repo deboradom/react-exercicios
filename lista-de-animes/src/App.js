@@ -9,50 +9,36 @@ class App extends Component {
   constructor(){
     super() 
     this.state = {lista:[]};
+    this.setState = this.setState.bind(this)
   }
 
+  pegarAnimesFETCH(){
 
-componentDidMount(){
-  console.log('DidMounttt')
+    fetch('http://api-animes.surge.sh')
+    .then(resposta => resposta.json())
+    .then(animes => {this.setState({lista:animes})})
+    // .then(animes => {console.log(animes)})
 
-  fetch('http://api-animes.surge.sh')
-    .then(function(resposta){resposta.json()})
-    .then(function(resposta){
-      this.setState({lista:resposta})
-    }.bind(this),
-    console.log(this)
-    )
+  }
+
+  pegarAnimesAJAX(){
     
-  
-   
-  // $.ajax({
-  //   url:'http://api-animes.surge.sh/',
-  //   dataType: 'json',
-  //   success:function(resposta){
-  //     console.log(this)
-  //     this.setState({lista:resposta});
-  //   }.bind(this)
-  // });
+    $.ajax({
+        url:'http://api-animes.surge.sh/',
+        dataType: 'json',
+        success:function(resposta){
+            // console.log(this)
+            this.setState({lista:resposta});
+          }.bind(this)
+    });
+  }
 
-
-}
-  
-  //  newAnime(post){
-  //    const options ={
-  //      method: 'POST',
-  //      body: JSON.stringify(post),
-  //      headers: new Headers({
-  //        'Content-Type' : 'application/json'
-  //      })
-  //    }
-  
-  //    return fetch('http://api-animes.surge.sh', options)
-  //      .then(res => res.json())
-  //      .then(res => console.log(res))
-  //      .catch(error => console.log("Erro!"))
-  //  }
-
-
+  componentDidMount(){
+    console.log('DidMounttt')
+    this.pegarAnimesFETCH()    
+    // this.pegarAnimesAJAX()    
+          
+  }
 
   render() {
     console.log('render')
