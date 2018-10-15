@@ -8,8 +8,14 @@ class App extends Component {
   
   constructor(){
     super() 
-    this.state = {lista:[]};
-    this.setState = this.setState.bind(this)
+    this.state = {lista:[], Nome:'',Ano:'',Tipo:'',Status:''};
+    // this.enviaFormAJAX = this.enviaFormAJAX.bind(this);
+    this.enviaFormFETCH = this.enviaFormFETCH.bind(this);
+
+    this.setNome = this.setNome.bind(this);
+    this.setAno = this.setAno.bind(this);
+    this.setTipo = this.setTipo.bind(this);
+    this.setStatus = this.setStatus.bind(this);
   }
 
   pegarAnimesFETCH(){
@@ -33,10 +39,61 @@ class App extends Component {
     });
   }
 
+
+  enviaFormAJAX(evento){
+    evento.preventDefault();
+    // console.log(this)
+    console.log('Enviando dados via AJAX');
+    $.ajax({
+      url:'http://api-animes.surge.sh',
+      contentType:'application/json',
+      dataType:'json',
+      type:'POST',
+      headers:{'X-Requested-With': 'XMLHttpRequest'},
+      data:JSON.stringify({Nome:this.state.nome,Ano:this.state.ano,Tipo:this.state.tipo,Status:this.state.status}),
+      success:function(resposta){
+        console.log(resposta)
+        console.log('Deu certo!');
+      },
+      error:function(resposta){
+        console.log('Deu erro!');
+      }
+    })
+  }
+
+  enviaFormFETCH(evento){
+    evento.preventDefault();
+    console.log('Enviando dados via FETCH');
+    fetch('http://api-animes.surge.sh', { 
+    method: 'POST', 
+    body: JSON.stringify({Nome:this.state.nome,Ano:this.state.ano,Tipo:this.state.tipo,Status:this.state.status}), 
+    headers: new Headers({'Content-Type': 'application/json'}),
+  })
+      .then(resposta => resposta.json()) 
+      // .then(resposta => (console.log(resposta)))
+  }
+
+  setNome(evento){
+    console.log("setNome")
+    this.setState({Nome:evento.target.value});
+  }
+
+  setAno(evento){
+    this.setState({Ano:evento.target.value});
+  }
+
+  setTipo(evento){
+    this.setState({Tipo:evento.target.value});
+  }
+
+  setStatus(evento){
+    this.setState({Status:evento.target.value});
+  }
+
   componentDidMount(){
     console.log('DidMounttt')
-    this.pegarAnimesFETCH()    
-    // this.pegarAnimesAJAX()    
+    // this.pegarAnimesFETCH()    
+    this.pegarAnimesAJAX()    
           
   }
 
@@ -76,22 +133,22 @@ class App extends Component {
             <div id="main">
             <div className="content" id="content">
               <div className="pure-form pure-form-aligned">
-                <form  className="pure-form pure-form-aligned">
+                <form  className="pure-form pure-form-aligned" onSubmit={this.enviaFormFETCH} method="post">
                   <div className="pure-control-group">
                     <label htmlFor="nome">Nome</label> 
-                    <input id="nome" type="text" name="nome" />                  
+                    <input id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} />                  
                   </div>
                   <div className="pure-control-group">
                     <label htmlFor="nome">Ano</label> 
-                    <input id="ano" type="text" name="ano" />                  
+                    <input id="ano" type="text" name="ano" value={this.state.ano} onChange={this.setAno}/>                  
                   </div>
                   <div className="pure-control-group">
                     <label htmlFor="nome">Tipo</label> 
-                    <input id="tipo" type="text" name="tipo"  />                                      
+                    <input id="tipo" type="text" name="tipo" value={this.state.tipo} onChange={this.setTipo} />                                      
                   </div>
                   <div className="pure-control-group">
                     <label htmlFor="nome">Status</label> 
-                    <input id="status" type="text" name="status"  />                                      
+                    <input id="status" type="text" name="status" value={this.state.status} onChange={this.setStatus}/>                                      
                   </div>
                   <div className="pure-control-group">                                  
                     <label></label> 
